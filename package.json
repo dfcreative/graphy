@@ -1,0 +1,36 @@
+{
+  "name": "graphy",
+  "version": "1.0.0",
+  "description": "HTML graph component",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node test",
+    "watch": "watchify -r ./index.js:graphy -d -o ./test/bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dfcreative/graphy"
+  },
+  "keywords": [
+    "graph",
+    "component"
+  ],
+  "author": "Deema Yvanow <dfcreative@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dfcreative/graphy/issues"
+  },
+  "homepage": "https://github.com/dfcreative/graphy",
+  "dependencies": {
+    "autosize": "^3.0.13",
+    "caret-position2": "^1.0.2",
+    "connection-line": "^1.1.1",
+    "draggy": "^1.4.0",
+    "inherits": "^2.0.1",
+    "random-item": "^1.0.0",
+    "xtend": "^4.0.0"
+  }
+}

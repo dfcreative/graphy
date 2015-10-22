@@ -1,0 +1,53 @@
+<!doctype html>
+<meta charset="utf-8">
+
+<title>Graphy playground</title>
+
+<!-- <script src="https://cdn.polyfill.io/v1/polyfill.js?features=default,WeakMap,WeakSet,Node.prototype.contains"></script> -->
+
+<link rel="stylesheet" type="text/css" href="../index.css" />
+
+
+<div class="graphy"></div>
+
+<style type="text/css">
+	body {
+		margin: 0;
+	}
+</style>
+
+<script src="./bundle.js"></script>
+
+<script type="text/javascript">
+	var Graphy = require('graphy');
+
+	//create graph
+	var graphy = Graphy({
+		element: document.querySelector('.graphy')
+	});
+
+	//add nodes
+	var home = graphy.createNode({
+		thumbnail: '⌂',
+		title: 'Home',
+		description: 'Place of return',
+		numberOfInputs: 1,
+		numberOfOutputs: 1,
+		// state: 'ready'
+	});
+
+	var work = graphy.createNode({
+		thumbnail: '⚒',
+		title: 'Work'
+	});
+
+	var airport = graphy.createNode({
+		thumbnail: '✈',
+		title: 'Airport'
+	});
+
+	//connect nodes
+	graphy.createConnection(home, work, {});
+	graphy.createConnection(work, home, {});
+	graphy.createConnection(home, airport, {});
+</script>

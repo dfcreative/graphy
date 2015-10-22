@@ -1,0 +1,85 @@
+@import './node_modules/connection-line/index.css';
+
+.graphy {
+	min-height: 30rem;
+}
+
+.graphy-node {
+	z-index: 2;
+	display: inline-block;
+	margin: 1rem;
+	position: relative;
+	width: 4rem;
+	height: 4rem;
+	/*outline: 1px solid lightgray;*/
+}
+
+.graphy-node-thumbnail {
+	position: relative;
+	cursor: default;
+	width: 4rem;
+	height: 4rem;
+	text-align: center;
+	line-height: 4rem;
+	font-size: 2.4rem;
+	font-weight: bolder;
+}
+
+.graphy-node-title {
+	box-shadow: none;
+	padding: 0;
+	margin: 0;
+	text-align: center;
+	border: 0;
+	display: block;
+	width: 6rem;
+	margin-left: -1rem;
+	resize: none;
+	background: none;
+	max-height: 4rem;
+	position: absolute;
+}
+
+.graphy-node-input, .graphy-node-output {
+	position: absolute;
+	z-index: 1;
+}
+.graphy-node-output {
+	top: 1rem;
+	height: 2rem;
+	width: .5rem;
+	right: -.5rem;
+	background: rgba(0,255,0,0.5);
+}
+.graphy-node-output:after {
+	content: '';
+	position: absolute;
+	top: -.5rem;
+	right: -1.5rem;
+	border-right: none;
+	border-top: 1.5rem solid transparent;
+	border-bottom: 1.5rem solid transparent;
+	border-left: 1.5rem solid rgba(0,255,0,0.5);
+}
+.graphy-node-input {
+	top: 1rem;
+	height: 2rem;
+	width: .5rem;
+	left: -1.5rem;
+	background: rgba(255,0,0,0.5);
+}
+.graphy-node-input:after {
+	content: '';
+	position: absolute;
+	top: -.5rem;
+	left: .5rem;
+	border-right: none;
+	border-top: 1.5rem solid transparent;
+	border-bottom: 1.5rem solid transparent;
+	border-left: 1.5rem solid rgba(255,0,0,0.5);
+}
+
+
+.graphy-connection {
+	z-index: 1;
+}
