@@ -2,7 +2,7 @@ Graphy is an easy-peasy graph visualiser.
 
 [image]
 
-[Demo](http://dfcreative.github.io/graphy).
+[Demo](http://dfcreative.github.io/graphy)
 
 ## Usage
 

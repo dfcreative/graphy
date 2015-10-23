@@ -13,6 +13,7 @@ var setCaret = require('caret-position2/set');
 var autosize = require('autosize');
 var Draggable = require('draggy');
 var randomItem = require('random-item');
+var offset = require('mucss/offset');
 
 
 /**
@@ -23,14 +24,26 @@ var randomItem = require('random-item');
 function Graphy (options) {
 	if (!(this instanceof Graphy)) return new Graphy(options);
 
-	extend(this, options);
+	var self = this;
+
+	extend(self, options);
 
 	//ensure element
-	if (!this.element) {
-		this.element = document.createElement('div');
+	if (!self.element) {
+		self.element = document.createElement('div');
 	}
 
-	this.element.classList.add('graphy');
+	self.element.classList.add('graphy');
+
+	//manage cursors
+	self.element.addEventListener('dragstart', function () {
+		self.element.style.cursor = 'move';
+	});
+	self.element.addEventListener('dragend', function () {
+		self.element.style.cursor = null;
+	});
+
+	self.update();
 }
 
 inherits(Graphy, Emitter);
@@ -39,13 +52,13 @@ inherits(Graphy, Emitter);
 /**
  * Default thumbnails for nodes.
  */
-Graphy.prototype.thumbnails = '❆☀☁❤☯☮✇✹✺✻✼✽✾❀✿❁❃❇❈❉❊❋'.split('');
+Graphy.prototype.thumbnails = '☒☀☯✹✺✻✼✽✾❀✿❁❃❇❈❉❊❋'.split('');
 
 
 /**
  * Default names for nodes.
  */
-Graphy.prototype.titles = 'Magic Light Energy Flow Silence Consciousness Universe Warm Fun Joy Power'.split(' ');
+Graphy.prototype.titles = ['Magic', 'Portal', 'Random', 'Something', 'Something else', 'Unknown', 'Object', 'Another object', 'Other', 'This', 'That', 'Thing'];
 
 
 /**
@@ -72,6 +85,7 @@ Graphy.prototype.createNode = function (options) {
 	var nodeEl = document.createElement('div');
 	nodeEl.className = 'graphy-node';
 	nodeEl.setAttribute('title', options.title);
+	nodeEl.setAttribute('tabindex', 1);
 
 	//create thumbnail
 	if (options.thumbnail) {
@@ -88,7 +102,7 @@ Graphy.prototype.createNode = function (options) {
 		var titleEl = document.createElement('textarea');
 		titleEl.className = 'graphy-node-title';
 		titleEl.setAttribute('data-graphy-node-title', '');
-		titleEl.rows = 1;
+		// titleEl.rows = 1;
 		titleEl.value = options.title;
 		nodeEl.appendChild(titleEl);
 
@@ -124,6 +138,47 @@ Graphy.prototype.createNode = function (options) {
 	if (options.numberOfOutputs) {
 		var outputEl = document.createElement('div');
 		outputEl.className = 'graphy-node-output';
+		outputEl.setAttribute('data-graphy-node-output', '');
+
+		//create connection on click on output
+		outputEl.addEventListener('mousedown', function (e) {
+			//place connector to the place of click - relative to the graphy container
+			var gOffset = offset(self.element);
+
+			var connector = new Connector({
+				from: nodeEl,
+				to: [
+					e.pageX - gOffset.left,
+					e.pageY - gOffset.top
+				]
+			});
+			connector.element.classList.add('graphy-connection');
+			connector.element.classList.add('graphy-connection-hangling');
+
+			//change main cursor
+			self.element.style.cursor = 'crosshair';
+
+			self.element.appendChild(connector.element);
+
+			document.addEventListener('mousemove', updateConnector);
+
+			function updateConnector (e) {
+				connector.to = [
+					e.pageX - gOffset.left,
+					e.pageY - gOffset.top
+				];
+				connector.update();
+			}
+
+			document.addEventListener('mouseup', off);
+
+			function off () {
+				self.element.style.cursor = null;
+				self.element.removeChild(connector.element);
+				document.removeEventListener('mousemove', updateConnector);
+				document.removeEventListener('mouseup', off);
+			}
+		});
 
 		nodeEl.appendChild(outputEl);
 	}
@@ -131,9 +186,9 @@ Graphy.prototype.createNode = function (options) {
 
 	//make self draggable, load initial position btw
 	var draggable = new Draggable(nodeEl, {
-		cancel: ['textarea', '.CodeMirror']
+		threshold: 10,
+		cancel: ['textarea', '.CodeMirror', '[data-graphy-node-output]', '[data-graphy-node-input]']
 	});
-
 
 	//focus on click
 	nodeEl.addEventListener('mousedown', function () {
@@ -152,6 +207,7 @@ Graphy.prototype.createNode = function (options) {
 			nodeEl.blur();
 		}
 	});
+
 
 
 	//insert element
@@ -192,8 +248,8 @@ Graphy.prototype.removeNode = function (node) {
  */
 Graphy.prototype.createConnection = function (from, to, how) {
 	var connector = new Connector(extend({
-		from: from.node.output,
-		to: to.node.input,
+		from: from,
+		to: to,
 		curvature: 0.2
 	}, how));
 
@@ -212,6 +268,11 @@ Graphy.prototype.createConnection = function (from, to, how) {
 	this.element.appendChild(connector.element);
 
 	connector.update();
+};
+
+
+Graphy.prototype.update = function () {
+
 };
 
 
