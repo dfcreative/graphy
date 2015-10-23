@@ -35,7 +35,8 @@
 	z-index: 2;
 	cursor: inherit;
 }
-.graphy-node:focus .graphy-node-thumbnail {
+.graphy-node:focus .graphy-node-thumbnail,
+.graphy-node-focus .graphy-node-thumbnail {
 	box-shadow: 0 0 0 4px lightgray;
 	border-radius: 4rem;
 }
@@ -101,6 +102,15 @@
 	border-bottom: 1.5rem solid transparent;
 	border-left: 1.5rem solid rgba(255,0,0,0.3);
 }
+.graphy-connecting .graphy-node-input {
+	visibility: visible;
+}
+.graphy-connecting .graphy-node-focus .graphy-node-input {
+	visibility: hidden;
+}
+.graphy-connecting .graphy-node-output {
+	visibility: hidden!important;
+}
 
 
 .graphy-connection {
@@ -108,5 +118,8 @@
 }
 .graphy-connection-hangling {
 	cursor: drag;
+	touch-callout: none;
+	-webkit-user-select: none;
+	user-select: none;
 	/*outline: 1px solid red;*/
 }

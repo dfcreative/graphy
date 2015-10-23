@@ -158,8 +158,17 @@ Graphy.prototype.createNode = function (options) {
 			//change main cursor
 			self.element.style.cursor = 'crosshair';
 
+			//add connector
 			self.element.appendChild(connector.element);
 
+			//make all available inputs visible
+			self.element.classList.add('graphy-connecting');
+
+			//set focus a state
+			nodeEl.classList.add('graphy-node-focus');
+			nodeEl.blur();
+
+			//update connector on move
 			document.addEventListener('mousemove', updateConnector);
 
 			function updateConnector (e) {
@@ -170,14 +179,20 @@ Graphy.prototype.createNode = function (options) {
 				connector.update();
 			}
 
+			//disconnect connector if finished
 			document.addEventListener('mouseup', off);
 
 			function off () {
 				self.element.style.cursor = null;
 				self.element.removeChild(connector.element);
+				self.element.classList.remove('graphy-connecting');
+				nodeEl.classList.remove('graphy-node-focus');
 				document.removeEventListener('mousemove', updateConnector);
 				document.removeEventListener('mouseup', off);
 			}
+
+			//update connector position
+			connector.update();
 		});
 
 		nodeEl.appendChild(outputEl);
@@ -187,11 +202,12 @@ Graphy.prototype.createNode = function (options) {
 	//make self draggable, load initial position btw
 	var draggable = new Draggable(nodeEl, {
 		threshold: 10,
-		cancel: ['textarea', '.CodeMirror', '[data-graphy-node-output]', '[data-graphy-node-input]']
+		cancel: ['textarea', '.CodeMirror', '[data-graphy-node-output]', '[data-graphy-node-input]'],
+		droppable: '[data-graphy-node-input]'
 	});
 
 	//focus on click
-	nodeEl.addEventListener('mousedown', function () {
+	nodeEl.addEventListener('mousedown', function (e) {
 		nodeEl.focus();
 	});
 
@@ -213,13 +229,11 @@ Graphy.prototype.createNode = function (options) {
 	//insert element
 	self.element.appendChild(nodeEl);
 
-	//save node properties on node element
-	nodeEl.node = extend(options, {
-		title: titleEl,
-		input: inputEl,
-		output: outputEl
-	});
+	//set element focused
+	nodeEl.focus();
 
+	//let draggy update it’s cancel targets
+	draggable.update();
 
 	return nodeEl;
 };
